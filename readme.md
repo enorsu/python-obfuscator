@@ -2,7 +2,7 @@
 
 Usage:
 
-`python main.py <input> <output> <optional: output2>`
+`python main.py <input> <output> <optional: output2>`(without <>)
 
 this has been developed using brainFarts 3™
 
