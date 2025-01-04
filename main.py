@@ -80,7 +80,7 @@ def main(codee):
 
 
         file = open(f"{filename}{x}.py", "w")
-        file.write(f"""             
+        file.write(f"""import base64             
 def skull():
     return f"{howami[0]}base64.b64decode('{i}'.encode()).decode(){howami[1]}"
 \n""")
