@@ -14,12 +14,6 @@ class D:
 def decoding(a):
     return f"base64.b64decode('{a}'.encode()).decode()"
 
-global unformatted_code
-unformatted_code = """
-print('test')
-a = 1 + 1
-print('1 + 1 is', str(a))
-"""
 
 global mainstartcode
 mainstartcode = f"""
@@ -86,8 +80,7 @@ def main(codee):
 
 
         file = open(f"{filename}{x}.py", "w")
-        file.write(f"""import base64
-                   
+        file.write(f"""             
 def skull():
     return f"{howami[0]}base64.b64decode('{i}'.encode()).decode(){howami[1]}"
 \n""")
