@@ -10,8 +10,15 @@ class ObfuscatorGui(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
 
-        self.setFixedSize(400, 200)
+        self.setFixedSize(500, 200)
         self.setWindowTitle("python-obf-gui")
+
+        self.versionString = "next-1.0.1"
+        
+
+        self.buttonLayout = QtWidgets.QHBoxLayout()
+
+
 
 
 
@@ -31,12 +38,24 @@ class ObfuscatorGui(QtWidgets.QWidget):
         
         
         self.statusLabel = QtWidgets.QLabel("Status: waiting")
+        
 
         self.inputfile = "none"
         self.outputfile = "none"
 
 
         self.obfuscateButton = QtWidgets.QPushButton("Obfuscate")
+        self.obfuscateButton.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
+        
+
+
+        self.informationLabel = QtWidgets.QLabel(f"{self.versionString}")
+        #self.informationLabel.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
+        
+
+        self.creditButton = QtWidgets.QPushButton("Information")
+        self.creditButton.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
+
 
         self.layout = QtWidgets.QFormLayout(self)
         
@@ -47,15 +66,31 @@ class ObfuscatorGui(QtWidgets.QWidget):
 
         self.layout.addRow(self.inputChooserButton, self.inputLabel)
 
-        self.layout.addRow(self.obfuscateButton, self.statusLabel)
+        self.buttonLayout.addWidget(self.obfuscateButton)
+        self.buttonLayout.addWidget(self.creditButton)
+
+        self.layout.addRow(self.buttonLayout)
+        
+
+        self.layout.addRow(self.statusLabel)
+
+        
         
 
         self.inputChooserButton.clicked.connect(self.inputFileChooser)
         
         self.obfuscateButton.clicked.connect(self.obfuscate)
 
+        self.creditButton.clicked.connect(self.informationPopup)
+
 
         self.show()
+
+    @QtCore.Slot()
+    def informationPopup(self):
+        QtWidgets.QMessageBox.information(self, "python-obf-gui", f"Python Obfuscator {self.versionString}\nMade by enorsu\nPySide6 built with Qt {QtCore.__version__}")
+
+    
     @QtCore.Slot()
     def inputFileChooser(self):
         self.inputfile = QtWidgets.QFileDialog.getOpenFileName()[0]
