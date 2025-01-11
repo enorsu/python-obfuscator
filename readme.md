@@ -16,6 +16,6 @@ How to use?
 
 ## Screenshots
 
-Python Obfuscator running under KDE Plasma 6.2.5 + Qt 6.8.1
+[Python Obfuscator 1.0.1](https://github.com/enorsu/python-obfuscator/releases/tag/next-1.0.1) running under KDE Plasma 6.2.5 + Qt 6.8.1
 
-![under linux](./assets/images/py-obf-linux.png)
+![under linux](./assets/images/py-obf-1.0.1-linux.png)
