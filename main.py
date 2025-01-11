@@ -1,107 +1,97 @@
-import base64
 import sys
+import random
+from PySide6 import QtCore, QtWidgets, QtGui
+import obf
+import os
 
-class D:
-    def decode(a):
-        return base64.b64decode(a.encode()).decode()
+
+
+class ObfuscatorGui(QtWidgets.QWidget):
+    def __init__(self):
+        super().__init__()
+
+        self.setFixedSize(400, 200)
+        self.setWindowTitle("python-obf-gui")
+
+
+
+        self.inputChooserButton = QtWidgets.QPushButton("Select input file")
+        self.inputLabel = QtWidgets.QTextEdit("")
+        self.inputLabel.setMaximumHeight(33)
+        
+
+        self.outputLabel1 = QtWidgets.QLabel("Output filename:")
+        self.outputLabel = QtWidgets.QTextEdit("obfuscated.py")
+        self.outputLabel.setMaximumHeight(33)
+
+        self.spamfileNameLabel = QtWidgets.QLabel("spamfile name:")
+        self.spamfilename = QtWidgets.QTextEdit("md")
+        self.spamfilename.setMaximumHeight(33)
+
+        
+        
+        self.statusLabel = QtWidgets.QLabel("Status: waiting")
+
+        self.inputfile = "none"
+        self.outputfile = "none"
+
+
+        self.obfuscateButton = QtWidgets.QPushButton("Obfuscate")
+
+        self.layout = QtWidgets.QFormLayout(self)
+        
+        
+        self.layout.addRow(self.spamfileNameLabel, self.spamfilename)
+        
+        self.layout.addRow(self.outputLabel1, self.outputLabel)
+
+        self.layout.addRow(self.inputChooserButton, self.inputLabel)
+
+        self.layout.addRow(self.obfuscateButton, self.statusLabel)
+        
+
+        self.inputChooserButton.clicked.connect(self.inputFileChooser)
+        
+        self.obfuscateButton.clicked.connect(self.obfuscate)
+
+
+        self.show()
+    @QtCore.Slot()
+    def inputFileChooser(self):
+        self.inputfile = QtWidgets.QFileDialog.getOpenFileName()[0]
+        
+        self.inputLabel.setText(self.inputfile)
     
-    def encode(a):
-        return base64.b64encode(a.encode()).decode()
-
-
-
-
-def decoding(a):
-    return f"base64.b64decode('{a}'.encode()).decode()"
-
-
-global mainstartcode
-mainstartcode = f"""
-import base64
-exec({decoding(D.encode("halal = ''"))})
-
-"""
-
-
-global shitcode
-
-
-def argument_validate():
-    try:
-        global argument_filename
-        global argument_output
-        argument_filename = sys.argv[1]
-        argument_output = sys.argv[2]
-        global filename
+    @QtCore.Slot()
+    def outputFileChooser(self):
+        self.outputfile = QtWidgets.QFileDialog.getOpenFileName()[0]
         
-        
+        self.outputLabel.setText(self.outputfile)
+    
+    @QtCore.Slot()
+    def obfuscate(self):
 
+        if not os.path.exists(self.inputfile):
+            QtWidgets.QMessageBox.warning(self, "python-obf-gui", "You need to set a valid file path!", buttons=QtWidgets.QMessageBox.StandardButton.Ok)
+            return
+        
+        self.statusLabel.setText("Status: " + "obfuscating")
         try:
-            argument_spamfile = sys.argv[3]
-            filename = argument_spamfile
-        except IndexError:
-        
-            filename = "md"
+            obf.obfuscate(self.inputfile, self.outputfile, self.spamfilename)
+        except Exception as c:
+            self.statusLabel.setText("Error: " + str(c))
+            
+            return
 
-    except IndexError:
-        print("Invalid arguments, Usage: python main.py <input> <output> <optional: spamfile name>")
-        return
-    
-    with open(argument_filename, "r") as file:
-        wholecode = file.readlines()
-        
-        
-    main(wholecode)
-    
-
-def getBase64Code(b):
-    a = f"""
-halal += {filename}{b}.skull() + '\\n'
-"""
-    a = D.encode(a)
-    return a
+        self.statusLabel.setText("Status: " + "obfuscation succesful!")
 
 
-def main(codee):
-    code = codee # fuck you i go expldoe
-    obf_code = [D.encode(i) for i in code]
+ 
 
-    fileopen = open(f"{argument_output}.py", "w")
-    fileopen.write(mainstartcode)
+if __name__ == "__main__":
+    app = QtWidgets.QApplication([])
 
-
-    
-    howami = ["{", "}"]
-    x = 0
-    for i in obf_code:
-        x += 1
-
-        
+    widget = ObfuscatorGui()
 
 
-        file = open(f"{filename}{x}.py", "w")
-        file.write(f"""import base64             
-def skull():
-    return f"{howami[0]}base64.b64decode('{i}'.encode()).decode(){howami[1]}"
-\n""")
-        file.close()
-
-        shit = f"{filename}" + str(x)
-        canweputthisinavariable = f"""
-exec({decoding(D.encode("import " + shit))})
-exec(base64.b64decode('{getBase64Code(x)}'.encode()).decode())
-
-"""
-        fileopen.write(canweputthisinavariable)
-    
-    fileopen.write(f"""
-exec({decoding(D.encode("exec(halal)"))})
-
-""")
-       
-
-
-
-
-
-argument_validate()
+    sys.exit(app.exec())
